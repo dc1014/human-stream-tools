@@ -1,9 +1,12 @@
-const _ = require('highland')
+import _ from 'highland'
 
 const BATCH_SIZE = 1000,
     CONCURRENCY = 100
 
-function dbOpStream(xform, op) {
+export default function dbOpStream(xform, op) {
+    if (typeof xform !== 'function') return new Error('transform must be a function')
+    if (typeof op !== 'function') return new Error('op must be a function')
+
     return _.pipeline(
         _.map(xform),
         _.errors(console.warn),
@@ -13,5 +16,3 @@ function dbOpStream(xform, op) {
         _.tap(console.log)
     )
 }
-
-module.exports = dbOpStream
