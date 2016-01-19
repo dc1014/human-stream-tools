@@ -2,7 +2,7 @@ import _ from 'highland'
 import csv from 'fast-csv'
 import {createWriteStream} from 'fs'
 
-export default function (options = {headers: true, delimit: '|'}, file = 'output.csv', xform = x => x) {
+export default function (options = {headers: true, delimiter: '|'}, file = 'output.csv', xform = x => x) {
     if (typeof xform !== 'function') return new Error('transform must be a function')
 
     const csvStream = csv.format(options.csv)
@@ -18,7 +18,7 @@ export default function (options = {headers: true, delimit: '|'}, file = 'output
             _.errors(console.warn),
             _.done(() => {
                 csvStream.end()
-                writeableStream.on('finish', () => 'finished')
+                return writeableStream.on('finish', () => 'finished')
             })
         )
 }
